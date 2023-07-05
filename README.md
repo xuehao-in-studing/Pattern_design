@@ -10,9 +10,6 @@
 创建单例模式的几种方式：
 1. 懒汉式，不加锁
 单例类代码：
-<div align="center">
-    <img src="[https://example.com/image.png](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/eef3c8af-03d1-47cf-9954-d00f1004b5c1)" alt="Example Image">
-</div>
 main：
 ![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/d97cb4dc-615d-4846-b11b-4ade37a07f38)  
 运行结果：
