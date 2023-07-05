@@ -32,6 +32,7 @@
             return instance;
         }
     }
+```
 构造器为private，防止外部访问，通过GetInstance获得该类的唯一实例。  
 
 main：  
