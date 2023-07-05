@@ -36,7 +36,30 @@
 构造器为private，防止外部访问，通过GetInstance获得该类的唯一实例。  
 
 main：  
-![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/d97cb4dc-615d-4846-b11b-4ade37a07f38)     
+```
+    SingleTon[] instanceArr = new SingleTon[5];
+    for (int i = 0; i < 5; i++)
+    {
+        // 在五个线程中同时获得实例
+        // 注：这里必需传入参数i，因为线程调用是随机的，如果将i作为index的参数传入，可能当i为5时调用线程
+        // 从而导致索引超限错误
+        new Thread((index) =>
+        {
+            instanceArr[(int)index] = SingleTon.GetInstance();
+        }).Start(i);
+    }
+    for (int i = 0; i < 4; i++)
+    {
+        if (Object.ReferenceEquals(instanceArr[i], instanceArr[i + 1]))
+        {
+            Console.WriteLine("指向同一个对象");
+        }
+        else
+        {
+            Console.WriteLine("指向不同对象");
+        }
+    }
+```
 在main线程中新建五个线程，每个线程都去获取实例，这时候会产生实例冲突。   
 
 运行结果：  
@@ -46,7 +69,39 @@ main：
 
 2. 双重锁定  
 加锁代码：  
-![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/957c2a42-34be-4516-8961-bcb91dbdc1cd)  
+```
+public class SingleTon
+    {
+        // 实例对应的锁对象，实例化之后就不可更改，因此该锁代表该实例
+        // 对lockobj加锁也就是对实例加锁
+        private readonly static object lockObj = new object();
+        private static SingleTon instance;
+        private SingleTon()
+        {
+        }
+        public static SingleTon GetInstance()
+        {
+            // 当实例对象还没有被创建时进行创建
+            if (instance == null)
+            {
+                lock (lockObj)
+                {
+                    if (instance == null)
+                    {
+                        Counter.Increment();
+                        Console.WriteLine($"第{Counter.GetCount()}次进入" + "线程加锁，正在创建实例......");
+                        //Thread.Sleep(500);
+                        instance = new SingleTon();
+                    }
+                }
+            }
+            Console.WriteLine("实例创建完成，正在获取实例......");
+            //Thread.Sleep(500);
+            // 实例创建后直接返回
+            return instance;
+        }
+    }
+```
 该代码两次确定单例是不是已经被创建，防止两个线程都进入了lock之前的代码，而当一个线程创建完毕释放锁后，另一个线程再次实例化。
 
 main和上面基本相同。  
@@ -54,7 +109,20 @@ main和上面基本相同。
 ![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/7e013e97-a795-4213-83fc-69f5338a4461)  
 
 3. 饿汉式：  
-![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/c5656201-2d46-4457-b065-8301eb0153b4)  
+```
+    public class SingleTon
+    {
+        // 调用类时直接创建实例对象
+        private static SingleTon instance = new SingleTon();
+
+        private SingleTon() { }
+
+        public static SingleTon GetInstance()
+        {
+            return instance;
+        }
+    }
+```
 优点：代码简洁，避免多线程同步问题，没有锁，效率高  
 缺点：产生垃圾对象  
 
