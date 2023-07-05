@@ -10,7 +10,28 @@
 创建单例模式的几种方式：
 1. 懒汉式，不加锁  
 单例类代码：  
-![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/6003c2fb-37f1-49b4-b2e5-4ea43e65f77e)  
+```
+    public class SingleInstance
+    {
+        // 单例、实例
+        private static SingleInstance instance;
+
+        private SingleInstance() { }
+        public static SingleInstance GetInstance()
+        {
+            if (instance == null)
+            {
+                Thread.Sleep(500);
+                // 计数器自增
+                Counter.Increment();
+                Console.WriteLine($"第{Counter.GetCount()}进入");
+                instance = new SingleInstance();
+            }
+            Console.WriteLine("实例化成功...");
+            Thread.Sleep(500);
+            return instance;
+        }
+    }
 构造器为private，防止外部访问，通过GetInstance获得该类的唯一实例。  
 
 main：  
