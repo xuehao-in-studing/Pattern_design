@@ -32,7 +32,7 @@ main和上面基本相同。
 ![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/7e013e97-a795-4213-83fc-69f5338a4461)  
 
 3. 饿汉式：  
-![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/c5656201-2d46-4457-b065-8301eb0153b4)
+![image](https://github.com/xuehao-in-studing/Pattern_design/assets/102791379/c5656201-2d46-4457-b065-8301eb0153b4)  
 优点：代码简洁，避免多线程同步问题，没有锁，效率高  
 缺点：产生垃圾对象  
 
